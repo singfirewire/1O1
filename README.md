@@ -1,1 +1,1 @@
-© 2024 Quick Event Cost Alpha"  ไว้ภายใน
+ 2024 Quick Event Cost Alpha  ไว้ภายใน
