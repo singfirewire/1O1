@@ -1,55 +1,32 @@
-//  ฟังก์ชันสำหรับจัดการ Tab
-const tabs = document.querySelectorAll('.tab');
-const contentContainer = document.querySelector('.content-container');
+function calculate() {
+    const rateElement = document.getElementById('rate');
+    const rateTypeElement = document.getElementById('rateType');
+    const quantityElement = document.getElementById('quantity');
+    const resultElement = document.getElementById('result');
 
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        //  ลบ class 'active' จาก Tab เก่า
-        document.querySelector('.tab.active').classList.remove('active');
-        //  เพิ่ม class 'active' ให้ Tab ใหม่
-        tab.classList.add('active');
-        //  โหลดเนื้อหาของ Tab ที่เลือก
-        loadTabContent(tab.dataset.tab);
-    });
-});
+    const rate = parseFloat(rateElement.value);
+    const rateType = rateTypeElement.value;
+    const quantity = parseFloat(quantityElement.value);
 
-function loadTabContent(tabNumber) {
-    //  ใช้  fetch  หรือ  XMLHttpRequest  เพื่อโหลดเนื้อหา HTML ของแต่ละ Tab
-    //  เช่น  fetch(`tab${tabNumber}.html`)  แล้วนำ HTML ไปใส่ใน  contentContainer
-    //  ...  (โค้ดสำหรับโหลดเนื้อหา HTML)  ...
+    let total = rate * quantity;
 
-    //  สร้างฟอร์มสำหรับรับค่าใช้จ่าย
-    createCostForm(tabNumber);
+    if (rateType === 'hourly') {
+        rateElement.value = 100; // รีเซ็ตค่าเริ่มต้นหากเลือกต่อชั่วโมง
+    } else {
+        rateElement.value = 700; // รีเซ็ตค่าเริ่มต้นหากเลือกต่อวัน
+    }
 
-    //  คำนวณผลลัพธ์
-    calculateSummary();
+    if (total > 1000) {
+        total *= 0.93;
+    }
+
+    resultElement.textContent = total.toFixed(2);
 }
 
-function createCostForm(tabNumber) {
-    //  สร้างฟอร์ม HTML  โดยใช้  DOM manipulation
-    //  ...  (โค้ดสำหรับสร้างฟอร์ม)  ...
 
-    //  เพิ่ม Event Listener  สำหรับ  input  เพื่อคำนวณผลลัพธ์แบบ Real-time
-    //  ...  (โค้ดสำหรับ Event Listener)  ...
+CSS สำหรับจัดรูปแบบ (style.css)
+/* เพิ่ม CSS เพื่อจัดรูปแบบตามต้องการ เช่น ขนาดฟอนต์ สี พื้นหลัง */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
-
-function calculateSummary() {
-    //  คำนวณผลลัพธ์  และแสดงใน  summary-details
-    //  ...  (โค้ดสำหรับคำนวณผลลัพธ์)  ...
-}
-
-//  โหลด Tab แรกเมื่อเริ่มต้น
-loadTabContent('1');
-
-//  ฟังก์ชันสำหรับบันทึกค่าใน Local Storage
-function saveFormData() {
-    //  ...  (โค้ดสำหรับบันทึกค่า)  ...
-}
-
-//  ฟังก์ชันสำหรับโหลดค่าจาก Local Storage
-function loadFormData() {
-    //  ...  (โค้ดสำหรับโหลดค่า)  ...
-}
-
-//  เรียกใช้  saveFormData  เมื่อมีการเปลี่ยนแปลงค่าในฟอร์ม
-//  เรียกใช้  loadFormData  เมื่อโหลดหน้าเว็บ
