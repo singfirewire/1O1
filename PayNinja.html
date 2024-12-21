@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณค่าแรง</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <h1>คำนวณค่าแรง</h1>
+    <form>
+        <label for="rate">ค่าแรง:</label>
+        <input type="number" id="rate" name="rate" value="700">
+        <select id="rateType" name="rateType">
+            <option value="daily">ต่อวัน</option>
+            <option value="hourly">ต่อชั่วโมง</option>
+        </select>
+        <br>
+        <label for="quantity">จำนวน:</label>
+        <input type="number" id="quantity" name="quantity">
+        <br>
+        <button type="button" onclick="calculate()">คำนวณ</button>
+        <br>
+        <p>ผลลัพธ์: <span id="result"></span> บาท</p>
+    </form>
+    <script src="script.js"></script> </body>
+</html>
