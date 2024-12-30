@@ -1,99 +1,101 @@
-function calculate() {
-    const length = parseFloat(document.getElementById("length").value);
-    const width = parseFloat(document.getElementById("width").value);
-    const pricePerSetPerDay = parseFloat(document.getElementById("price").value);
-    const days = parseInt(document.getElementById("days").value);
-    const useDiscount = document.getElementById("discount").checked;
-  
-    const numPanelsLength = length / 1.22;
-    const numPanelsWidth = width / 1.22;
-    const totalPanels = numPanelsLength * numPanelsWidth;
-    const legs = (numPanelsLength + 1) * (numPanelsWidth + 1);
-    const beams = (numPanelsLength * (numPanelsWidth + 1)) + (numPanelsWidth * (numPanelsLength + 1));
-  
-    let totalCost = useDiscount && days >= 2
-      ? pricePerSetPerDay * totalPanels + (pricePerSetPerDay / 2) * totalPanels * (days - 1)
-      : pricePerSetPerDay * totalPanels * days;
-  
-    document.getElementById("result").innerHTML = `
-      <strong>จำนวนขา:</strong> ${legs} ชิ้น<br>
-      <strong>จำนวนคาน:</strong> ${beams} ชิ้น<br>
-      <strong>จำนวนพื้นเวที:</strong> ${totalPanels} ชิ้น<br>
-      <strong>ค่าบริการ:</strong> ${totalCost.toLocaleString()} บาท
-    `;
-  
-    drawStage(numPanelsLength, numPanelsWidth);
-  }
-  
-  function drawStage(width, height) {
-    const canvas = document.getElementById("stageLayout");
-    const ctx = canvas.getContext("2d");
-  
-    // ปรับขนาด Canvas ให้เหมาะสมกับขนาดเวที
-    const maxCanvasWidth = 800; // ความกว้างสูงสุดของ Canvas
-    const maxCanvasHeight = 600; // ความสูงสูงสุดของ Canvas
-    const scale = Math.min(maxCanvasWidth / (width * 50), maxCanvasHeight / (height * 50));
-    canvas.width = width * 50 * scale;
-    canvas.height = height * 50 * scale;
-  
-    // ล้าง Canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-    // วาดพื้นเวที
-    ctx.fillStyle = "#ccc"; // สีพื้นเวที
-    ctx.fillRect(50 * scale, 50 * scale, width * 50 * scale, height * 50 * scale); // วาดสี่เหลี่ยม (เวที)
-    ctx.strokeStyle = "#000"; // สีเส้นขอบ
-    ctx.strokeRect(50 * scale, 50 * scale, width * 50 * scale, height * 50 * scale); // วาดเส้นขอบ
-  
-    // วาดรอยต่อของเวที (เส้นแบ่งระหว่างแผ่น)
-    ctx.strokeStyle = "#888"; // สีเส้นแบ่ง
-    ctx.lineWidth = 2;
-    for (let i = 1; i < width; i++) {
-      ctx.beginPath();
-      ctx.moveTo(50 * scale + i * 50 * scale, 50 * scale);
-      ctx.lineTo(50 * scale + i * 50 * scale, 50 * scale + height * 50 * scale);
-      ctx.stroke();
-    }
-    for (let j = 1; j < height; j++) {
-      ctx.beginPath();
-      ctx.moveTo(50 * scale, 50 * scale + j * 50 * scale);
-      ctx.lineTo(50 * scale + width * 50 * scale, 50 * scale + j * 50 * scale);
-      ctx.stroke();
-    }
-  
-    // วาดวงกลมแสดงตำแหน่งขา
-    ctx.fillStyle = "#555"; // สีวงกลม
-    for (let i = 0; i <= width; i++) {
-      for (let j = 0; j <= height; j++) {
-        ctx.beginPath();
-        ctx.arc(50 * scale + i * 50 * scale, 50 * scale + j * 50 * scale, 5 * scale, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  
-    // วาดคาน
-    ctx.strokeStyle = "#333"; // สีคาน
-    ctx.lineWidth = 3;
-    for (let i = 0; i <= width; i++) {
-      ctx.beginPath();
-      ctx.moveTo(50 * scale + i * 50 * scale, 50 * scale);
-      ctx.lineTo(50 * scale + i * 50 * scale, 50 * scale + height * 50 * scale);
-      ctx.stroke();
-    }
-    for (let j = 0; j <= height; j++) {
-      ctx.beginPath();
-      ctx.moveTo(50 * scale, 50 * scale + j * 50 * scale);
-      ctx.lineTo(50 * scale + width * 50 * scale, 50 * scale + j * 50 * scale);
-      ctx.stroke();
-    }
-  }
-  
-  // เพิ่ม Event Listener สำหรับการคำนวณทันทีเมื่อมีการเปลี่ยนแปลงข้อมูล
-  document.getElementById("length").addEventListener("change", calculate);
-  document.getElementById("width").addEventListener("change", calculate);
-  document.getElementById("price").addEventListener("input", calculate);
-  document.getElementById("days").addEventListener("input", calculate);
-  document.getElementById("discount").addEventListener("change", calculate);
-  
-  // คำนวณครั้งแรกเมื่อโหลดหน้าเว็บ
-  calculate();
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StageMaster - คำนวณชิ้นส่วนเวทีและค่าบริการ</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">StageMaster</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title text-center mb-4">กรอกข้อมูล</h5>
+            <div class="mb-3">
+              <label for="length" class="form-label">ความลึกของเวที (เมตร)</label>
+              <select class="form-select" id="length">
+                <option value="1.22">1.22</option>
+                <option value="2.44">2.44</option>
+                <option value="3.66">3.66</option>
+                <option value="4.88">4.88</option>
+                <option value="6.10">6.10</option>
+                <option value="7.32">7.32</option>
+                <option value="8.54">8.54</option>
+                <option value="9.76">9.76</option>
+                <option value="10.98">10.98</option>
+                <option value="12.20">12.20</option>
+                <option value="13.42">13.42</option>
+                <option value="14.64">14.64</option>
+                <option value="15.86">15.86</option>
+                <option value="17.08">17.08</option>
+                <option value="18.30">18.30</option>
+                <option value="19.52">19.52</option>
+                <option value="20.74">20.74</option>
+                <option value="21.96">21.96</option>
+                <option value="23.18">23.18</option>
+                <option value="24.40">24.40</option>
+                <option value="25.62">25.62</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="width" class="form-label">ความกว้างของเวที (เมตร)</label>
+              <select class="form-select" id="width">
+                <option value="1.22">1.22</option>
+                <option value="2.44">2.44</option>
+                <option value="3.66">3.66</option>
+                <option value="4.88">4.88</option>
+                <option value="6.10">6.10</option>
+                <option value="7.32">7.32</option>
+                <option value="8.54">8.54</option>
+                <option value="9.76">9.76</option>
+                <option value="10.98">10.98</option>
+                <option value="12.20">12.20</option>
+                <option value="13.42">13.42</option>
+                <option value="14.64">14.64</option>
+                <option value="15.86">15.86</option>
+                <option value="17.08">17.08</option>
+                <option value="18.30">18.30</option>
+                <option value="19.52">19.52</option>
+                <option value="20.74">20.74</option>
+                <option value="21.96">21.96</option>
+                <option value="23.18">23.18</option>
+                <option value="24.40">24.40</option>
+                <option value="25.62">25.62</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">ค่าบริการเช่าต่อวัน (บาท)</label>
+              <input type="number" class="form-control" id="price" min="0" value="500">
+            </div>
+            <div class="mb-3">
+              <label for="days" class="form-label">จำนวนวันที่ใช้งาน</label>
+              <input type="number" class="form-control" id="days" min="1" value="1">
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="discount">
+              <label class="form-check-label" for="discount">โปรโมชัน (วันที่ 2 เป็นต้นไปครึ่งราคา)</label>
+            </div>
+          </div>
+        </div>
+        <div class="card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title text-center mb-4">จำนวนชิ้นส่วนและค่าบริการ</h5>
+            <p id="result" class="card-text text-center">กรุณากรอกข้อมูล</p>
+          </div>
+        </div>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title text-center mb-4">ตัวอย่างการจัดวางเวที</h5>
+            <canvas id="stageLayout" width="400" height="300" style="border:1px solid #000; margin: 0 auto; display: block;"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
