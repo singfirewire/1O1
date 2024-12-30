@@ -1,45 +1,50 @@
 body {
-    background-color: #f8f9fa;
-    font-family: 'Prompt', sans-serif;
-  }
-  
+  background-color: #f8f9fa;
+  font-family: 'Prompt', sans-serif;
+}
+
+h1 {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control, .form-select {
+  border-radius: 5px;
+}
+
+canvas {
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.text-center small {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
   h1 {
-    color: #007bff;
-    font-weight: bold;
+    font-size: 1.75rem;
   }
-  
-  .card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
   .card-title {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.25rem;
   }
-  
-  .form-label {
-    font-weight: bold;
-  }
-  
   .form-control, .form-select {
-    border-radius: 5px;
+    font-size: 0.9rem;
   }
-  
-  canvas {
-    background-color: #fff;
-    border-radius: 10px;
-  }
-  
-  @media (max-width: 768px) {
-    h1 {
-      font-size: 1.75rem;
-    }
-    .card-title {
-      font-size: 1.25rem;
-    }
-    .form-control, .form-select {
-      font-size: 0.9rem;
-    }
-  }
+}
